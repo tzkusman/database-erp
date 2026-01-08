@@ -1,0 +1,7 @@
+{
+  "name": "TzK.SoL - Core",
+  "description": "A modern, scalable Enterprise Resource Planning system starting with Supabase integration and Inventory management.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
