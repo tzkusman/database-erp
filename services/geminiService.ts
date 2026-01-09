@@ -1,14 +1,15 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Initialize the Google GenAI SDK with the API key from environment variables.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getInventoryInsights = async (items: any[]) => {
+  if (!items || items.length === 0) return [];
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Analyze this inventory data and suggest 3 business actions: ${JSON.stringify(items)}`,
+      contents: `You are an expert ERP Intelligence Analyst. Analyze the following inventory data for a corporation and provide 3 high-impact actionable business insights in JSON format. Focus on capital tied up in stock, low-inventory risks, and category balancing. Data: ${JSON.stringify(items)}`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -16,8 +17,8 @@ export const getInventoryInsights = async (items: any[]) => {
           items: {
             type: Type.OBJECT,
             properties: {
-              insight: { type: Type.STRING },
-              action: { type: Type.STRING },
+              insight: { type: Type.STRING, description: "A data-driven observation about the inventory health." },
+              action: { type: Type.STRING, description: "The recommended operational step to take." },
               priority: { type: Type.STRING, enum: ['Low', 'Medium', 'High'] }
             },
             required: ['insight', 'action', 'priority']
@@ -25,11 +26,14 @@ export const getInventoryInsights = async (items: any[]) => {
         }
       }
     });
-    // Extracting text from response and parsing it as JSON.
     const text = response.text || '[]';
     return JSON.parse(text.trim());
   } catch (error) {
-    console.error("Gemini Error:", error);
-    return [];
+    console.error("Gemini Intelligence Error:", error);
+    return [{ 
+      insight: "Intelligence core temporarily offline.", 
+      action: "Check your API connection or data volume.", 
+      priority: "Low" 
+    }];
   }
 };

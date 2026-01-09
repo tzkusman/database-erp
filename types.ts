@@ -8,6 +8,7 @@ export interface InventoryItem {
   category: string;
   image_url?: string;
   created_at?: string;
+  user_id?: string;
 }
 
 export interface Profile {
