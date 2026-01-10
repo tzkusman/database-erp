@@ -45,6 +45,29 @@ export interface Profile {
   avatar_url?: string;
   website?: string;
   updated_at?: string;
+  email?: string;
 }
 
-export type ViewType = 'dashboard' | 'inventory' | 'tasks' | 'settings' | 'setup' | 'auth';
+export interface EmailAttachment {
+  name: string;
+  url: string;
+  type: string;
+  size: number;
+}
+
+export interface Email {
+  id: string;
+  user_id: string;
+  recipient_email: string;
+  subject: string;
+  body: string;
+  attachments: EmailAttachment[];
+  status: 'sent' | 'pending' | 'failed';
+  created_at: string;
+  sender?: {
+    full_name: string;
+    avatar_url: string;
+  };
+}
+
+export type ViewType = 'dashboard' | 'inventory' | 'tasks' | 'emails' | 'settings' | 'setup' | 'auth';
